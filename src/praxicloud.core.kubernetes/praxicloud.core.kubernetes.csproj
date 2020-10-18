@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\common.props" />
+  
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>PraxiCloud-Core-Kubernetes</PackageId>
+    <Description>A set of standard Kubernetes features and functions</Description>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageTags>PraxiCloud Core Kubernetes Stateful pod container</PackageTags>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\repos\praxicloud.core.kubernetes\documents\praxicloud.core.kubernetes\praxicloud.core.kubernetes.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="KubernetesClient" Version="2.0.33" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="3.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.9" />
+    <PackageReference Include="PraxiCloud-Core" Version="1.1.1" />
+    <PackageReference Include="PraxiCloud-Core-Kestrel" Version="1.1.1" />
+    <PackageReference Include="PraxiCloud-Core-Metrics" Version="1.3.20201017.1" />
+    <PackageReference Include="PraxiCloud-Core-Metrics-ApplicationInsights" Version="1.1.1" />
+    <PackageReference Include="PraxiCloud-Core-Metrics-Prometheus" Version="1.1.1" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,784 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>praxicloud.core.kubernetes</name>
+    </assembly>
+    <members>
+        <member name="T:praxicloud.core.kubernetes.ContainerBase">
+            <summary>
+            A container base type to simplify many of the common aspects of building a micro service element
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.ContainerBase._cancellationTokenSource">
+            <summary>
+            A cancellation token source used to trigger a container shutdown
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.ContainerBase._processingTask">
+            <summary>
+            A task 
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.ContainerBase._watch">
+            <summary>
+            A watch subscription
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.ContainerBase._baseProbeConfiguration">
+            <summary>
+            The base configuration for the probe;
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.#ctor(System.String,praxicloud.core.kubernetes.IProbeConfiguration,praxicloud.core.kubernetes.IDiagnosticsConfiguration)">
+            <summary>
+            Initializes a new instance of the type
+            </summary>
+            <param name="containerName">The name of the container to be used for logging etc.</param>
+            <param name="probeConfiguration">The probe configuration for health and availability</param>
+            <param name="diagnosticsConfiguration">The diagnostics configuration for logging and metrics</param>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.ContainerCancellationToken">
+            <summary>
+            A cancellation token that can be monitored for container shutdown
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.ContainerTask">
+            <summary>
+            A task that can be monitored for container shutdown
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.IsKubernetes">
+            <summary>
+            True if running on Kubernetes
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.CancellationToken">
+            <summary>
+            The cancellation token that combines the customer cancellation token and the container cancellation token to indicate an event should trigger cancellation
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.Task">
+            <summary>
+            A task that completes when the container should shutdown
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.Logger">
+            <summary>
+            The logger to write diagnostics messages to
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.LoggerFactory">
+            <summary>
+            The factory to create new loggers from
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.MetricFactory">
+            <summary>
+            The factory to create metrics from
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesNamespace">
+            <summary>
+            The namespace in Kubernetes the Pod is in
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesPodName">
+            <summary>
+            The pod name in Kubernetes
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesClient">
+            <summary>
+            The Kubernetes client if in Kubernetes
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesControllerFound">
+            <summary>
+            Is a Kubernetes controller found for the pod
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesControllerName">
+            <summary>
+            The Kubernetes controller name
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesControllerTypeName">
+            <summary>
+            The name of the type of the controller
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesControllerType">
+            <summary>
+            The type of the controller
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesStatefulSetIndex">
+            <summary>
+            The index number of the stateful set
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesDesiredReplicaCount">
+            <summary>
+            If the kubernetes controller supports replicas this will contain the desired replica count that is configured
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesReadyReplicaCount">
+            <summary>
+            If the kubernetes controller supports replicas this will contain the replica count that is ready
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.KubernetesReplicaCount">
+            <summary>
+            If the Kubernetes controller supports replicas this will contain the replica count
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.StartContainer">
+            <summary>
+            A method that the primary container must call to start processing
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.ConfigureKubernetesDataAsync">
+            <summary>
+            Determines if it is Kubernetes and if so retrieves the information
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.ControllerWatchHandler(praxicloud.core.kubernetes.ReplicaDetails,System.Object)">
+            <summary>
+            A handler that receives updates to the Kubernetes replica count
+            </summary>
+            <param name="details">The details of the new replica set</param>
+            <param name="userState">The user state for the watch it is associated with</param>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.KubernetesReplicaChange(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            A method that is used to notify of replica count changes in the controller
+            </summary>
+            <param name="previousReplicaCount">The number of replicas that were previously active</param>
+            <param name="previousDesiredReplicaCount">The number of replicas that were previously desired</param>
+            <param name="previousReadyReplicaCount">The number of replicas that were previously ready</param>
+            <param name="newReplicaCount">The number of replicas that are now present</param>
+            <param name="newDesiredReplicaCount">The number of replcas that are now desired</param>
+            <param name="newReadyReplicaCount">The number of replicas that are now ready</param>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.ProcessingLoopAsync(praxicloud.core.kubernetes.IProbeConfiguration)">
+            <summary>
+            Primary processing loop
+            </summary>
+            <param name="probeConfiguration">Health and availability probe configuration</param>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.StartupAsync(System.Threading.CancellationToken)">
+            <summary>
+            A method that can be overridden by the derived types to execute operations at startup
+            </summary>
+            <param name="cancellationToken">A token to monitor for container shutdown</param>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.ExecuteAsync(System.Threading.CancellationToken)">
+            <summary>
+            A method that performs the primary operations of the container
+            </summary>
+            <param name="cancellationToken">A token to monitor for container shutdown</param>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.ShutdownAsync(System.Boolean,System.Threading.CancellationToken)">
+            <summary>
+            A method that can be overridden by the derived types to execute operations to shutdown
+            </summary>
+            <param name="startupSuccessful">True if startup was successful</param>
+            <param name="cancellationToken">A token to monitor for container shutdown</param>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.SleepInChunks(System.TimeSpan,System.Nullable{System.TimeSpan},System.Threading.Tasks.Task,System.Threading.CancellationToken)">
+            <summary>
+            A helper method to sleep in chunks until the time period expires, the cancellation token is triggered or the task completes or container is shutting down
+            </summary>
+            <param name="duration">The duration to sleep for</param>
+            <param name="chunkDuration">The duration of each chunk when sleeping</param>
+            <param name="task">A task to monitor for completion</param>
+            <param name="cancellationToken">A cancellation token to monitor for abort requests</param>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.CustomCancellationToken">
+            <summary>
+            Can be overridden to provide a cancellation token to monitor for abort requests that will terminate the container if triggered
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.CustomTask">
+            <summary>
+            A task that can be overridden to provide a task that when completed will trigger the container to end
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.UnhandledExceptionRaised(System.Object,System.Exception,System.Boolean,praxicloud.core.exceptions.UnobservedType)">
+            <summary>
+            Invoked when application or task unhandled exceptions are raised
+            </summary>
+            <param name="sender">The source of the exception handler</param>
+            <param name="exception">The exception object that was raised</param>
+            <param name="isTerminating">True if the app domain is terminating</param>
+            <param name="sourceType">The source of the invocation (app domain or task scheduler)</param>
+            <returns>True if the exception should be concerned handled</returns>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.CreateProbes(praxicloud.core.kubernetes.IProbeConfiguration)">
+            <summary>
+            A factory that can be overridden to create non standard availability probe brokers
+            </summary>
+            <param name="probeConfiguration">The probe configuration details</param>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.IsHealthyAsync">
+            <summary>
+            Polled at intervals to test if the service is healthy
+            </summary>
+            <returns>Returns true if the service is healthy</returns>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ContainerBase.IsAvailableAsync">
+            <summary>
+            Determines if the service is available
+            </summary>
+            <returns>Returns true if available</returns>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.ControllerDetails">
+            <summary>
+            The details of the contoller associated with a namespace and pod
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ControllerDetails.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the type
+            </summary>
+            <param name="namespaceName">The namespace names</param>
+            <param name="podName">The pod name</param>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ControllerDetails.NamespaceName">
+            <summary>
+            The name of the namespace the pod is associated with
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ControllerDetails.PodName">
+            <summary>
+            The name of the pod 
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ControllerDetails.ControllerFound">
+            <summary>
+            True if a controller is found that the pod is associated with
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ControllerDetails.ControllerType">
+            <summary>
+            The controller type if found, or null if not
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ControllerDetails.ControllerName">
+            <summary>
+            The name of the controller if found, or null if not
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ControllerDetails.Type">
+            <summary>
+            The type of controller
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ControllerDetails.SetControllerDetails(System.String,System.String)">
+            <summary>
+            Sets the controller details
+            </summary>
+            <param name="controllerType">The controller type</param>
+            <param name="controllerName">The controller name</param>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration">
+            <summary>
+            A diagnostics definition that outputs logging to console and debug with metrics being output to Application Insights, console, debug and prometheus as configured
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.#ctor(System.String,praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultLoggerConfiguration,praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration)">
+            <summary>
+            Initializes a new instance of the type
+            </summary>
+            <param name="diagnosticsName">The name to use when writing diagnostics</param>
+            <param name="loggerConfiguration">Basic logging configuration</param>
+            <param name="metricConfiguration">Basic metrics configuration</param>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration">
+            <summary>
+            Metric details
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration.IncludeApplicationInsights">
+            <summary>
+            True to enable the Application Insights Metrics Provider
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration.InstrumentationKey">
+            <summary>
+            The instrumentation key to use for writing to application insights
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration.IncludePrometheus">
+            <summary>
+            True to provide a scraping Prometheus endpoint
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration.PrometheusPort">
+            <summary>
+            The port to listen for Prometheus scraping requests
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration.IncludeConsole">
+            <summary>
+            True to write to the console
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration.IncludeDebug">
+            <summary>
+            True to write to the debug stream
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration.IncludeLabels">
+            <summary>
+            True to include metric labels
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultMetricConfiguration.ReportingInterval">
+            <summary>
+            The interval to report at
+            </summary>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultLoggerConfiguration">
+            <summary>
+            Logging details 
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultLoggerConfiguration.Level">
+            <summary>
+            The level to write to the logger at
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultLoggerConfiguration.IncludeScopes">
+            <summary>
+            True to include scopes
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultLoggerConfiguration.IncludeColors">
+            <summary>
+            True to include colors if possible
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultLoggerConfiguration.IncludeDebugLogger">
+            <summary>
+            True to write to the debug stream
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DefaultDiagnosticsConfiguration.DefaultLoggerConfiguration.IncludeConsoleLogger">
+            <summary>
+            True to write to the console provider
+            </summary>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.DiagnosticsConfiguration">
+            <summary>
+            A custom diagnostics configuration 
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DiagnosticsConfiguration.LoggerFactory">
+            <inheritdoc />
+        </member>
+        <member name="P:praxicloud.core.kubernetes.DiagnosticsConfiguration.MetricFactory">
+            <inheritdoc />
+        </member>
+        <member name="T:praxicloud.core.kubernetes.IDiagnosticsConfiguration">
+            <summary>
+            The diagnostics details for metrics and logging
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IDiagnosticsConfiguration.LoggerFactory">
+            <summary>
+            The logger factory used to create loggers
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IDiagnosticsConfiguration.MetricFactory">
+            <summary>
+            The metric factory used to create metric objects
+            </summary>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.IProbeConfiguration">
+            <summary>
+            Configures container probes
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IProbeConfiguration.AvailabilityIPAddress">
+            <summary>
+            The availability probes IP Address to listen on. 
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IProbeConfiguration.AvailabilityPort">
+            <summary>
+            The port to listen on for the availability probe. If null it will not start an availability probe
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IProbeConfiguration.AvailabilityProbeInterval">
+            <summary>
+            The interval that the availability probe validation method will be checked, if not provided it will default to 5 seconds
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IProbeConfiguration.HealthIPAddress">
+            <summary>
+            The health probes IP Address to listen on. 
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IProbeConfiguration.HealthPort">
+            <summary>
+            The port to listen on for the health probe. If null it will not start an health probe
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IProbeConfiguration.HealthProbeInterval">
+            <summary>
+            The interval that the health probe validation method will be checked, if not provided it will default to 5 seconds
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IProbeConfiguration.UseTcp">
+            <summary>
+            Use basic TCP probe over an HTTP based
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.IProbeConfiguration.Certificate">
+            <summary>
+            The X509 Certificate to use if HTTPS is desired
+            </summary>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.KubernetesApiClient">
+            <summary>
+            The base class that defines the cluster interop
+            </summary>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.KubernetesApiClient.ReplicaCountReporter">
+            <summary>
+            A method that is invoked when the number of replicas have been reported on by the Kubernetes API watch
+            </summary>
+            <param name="details">The details of the replica sets</param>
+            <param name="userState">A user state object returned in when the handler is invoked</param>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesApiClient.PodNameVariable">
+            <summary>
+            The name of the variable that holds the Pod Name if configured based on recommendation
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesApiClient.NamspaceNameVariable">
+            <summary>
+            The name of the variable that holds the Namespace name if configured based on recommendations
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesApiClient._disposalCount">
+            <summary>
+            The number of times the client has been disposed of
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesApiClient._configuration">
+            <summary>
+            The Kuberentes configuration information that is in use
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesApiClient._client">
+            <summary>
+            The client being used to communicate with the cluster
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesApiClient.#ctor">
+            <summary>
+            Uses the best option to determine the cluster connection information, including in cluster.
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesApiClient.#ctor(System.String)">
+            <summary>
+            Uses the Kube Config file specified to identify the cluster to interact with
+            </summary>
+            <param name="fileName">The Kube Config file to use</param>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.KubernetesApiClient.CurrentContext">
+            <summary>
+            The current Kubernetes Context
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.KubernetesApiClient.Host">
+            <summary>
+            The current Kubernetes Host
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.KubernetesApiClient.BaseUri">
+            <summary>
+            The base URI 
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.KubernetesApiClient.PodName">
+            <summary>
+            The name of the pod only available in pods configured as recommended with downward API
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.KubernetesApiClient.NamespaceName">
+            <summary>
+            The name of the pods namespace only available in pods configured as recommended with downward API
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesApiClient.GetNamespacesAsync(System.Threading.CancellationToken)">
+            <summary>
+            Retrieves a list of the namespaces in the cluster
+            </summary>
+            <param name="cancellationToken">A token to monitor for abort requests</param>
+            <returns>A list of namespaces in the cluster</returns>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesApiClient.GetPodsInNamespaceAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the pods in the specified namespace
+            </summary>
+            <param name="namespaceName">The name of the namespace to retrieve pods in</param>
+            <param name="cancellationToken">A token to monitor for abort requests</param>
+            <returns>A list of pods in the namespace</returns>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesApiClient.GetPodControllerDetailsAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Retrieves the controller information associated with a pod if found
+            </summary>
+            <param name="namespaceName">The name of the namespace to retrieve the controller for</param>
+            <param name="podName">The name of the pod that the controller is associated with</param>
+            <param name="cancellationToken">A token to monitor for abort requests</param>
+            <returns>The controller details</returns>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesApiClient.GetReplicaInformationAsync(System.String,System.String,praxicloud.core.kubernetes.KubernetesControllerType,System.Threading.CancellationToken)">
+            <summary>
+            Retrieve the replica information associated with the controller. This only supports StatefulSets, Replicaet, ReplicationControllers and DaemonSets
+            </summary>
+            <param name="namespaceName">The namespace that the controller is located in</param>
+            <param name="controllerName">The name of the controller</param>
+            <param name="controllerType">The type of the controller</param>
+            <param name="cancellationToken">A token to monitor for abort requests</param>
+            <returns></returns>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesApiClient.SubscribeToReplicaInformationAsync(System.String,System.String,praxicloud.core.kubernetes.KubernetesControllerType,System.Object,praxicloud.core.kubernetes.KubernetesApiClient.ReplicaCountReporter,System.Threading.CancellationToken)">
+            <summary>
+            Retrieve the replica information associated with the controller and sets up a watch. This only supports StatefulSets, Replicaet, ReplicationControllers and DaemonSets
+            </summary>
+            <param name="namespaceName">The namespace that the controller is located in</param>
+            <param name="controllerName">The name of the controller</param>
+            <param name="controllerType">The type of the controller</param>
+            <param name="userState">A state object that is passed in to the handler when the callback is invoked</param>
+            <param name="cancellationToken">A token to monitor for abort requests</param>
+            <param name="watchCallback">A callback that is notified if something changes with a controllers replica count (desired, current or ready)</param>
+            <returns>A kubernetes watch that should not be disposed until it is no longer needed</returns>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesApiClient.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:praxicloud.core.kubernetes.KubernetesControllerType">
+            <summary>
+            Types of controllers
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesControllerType.None">
+            <summary>
+            None has been defined
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesControllerType.Unknown">
+            <summary>
+            There is a defined controller but it was unrecognizable
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesControllerType.Deployment">
+            <summary>
+            A Kubernetes deployment
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesControllerType.ReplicaSet">
+            <summary>
+            A Kubernetes Replica Set
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesControllerType.StatefulSet">
+            <summary>
+            A Kubernetes Stateful Set
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesControllerType.DaemonSet">
+            <summary>
+            A Kubernetes Daemon Set
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesControllerType.Job">
+            <summary>
+            A Kubernetes Job
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesControllerType.CronJob">
+            <summary>
+            A Kubernetes Cron Job
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesControllerType.ReplicationController">
+            <summary>
+            A Kubernetes Replication Controller
+            </summary>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.KubernetesWatch">
+            <summary>
+            A basic type that holds a Kubernetes watch open
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesWatch._disposalCount">
+            <summary>
+            The number of times the instance was disposed of
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesWatch._watchHandle">
+            <summary>
+            A watch that when disposed of the subscription will be stopped
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesWatch.#ctor(System.IDisposable,praxicloud.core.kubernetes.KubernetesWatchStatus,System.Object,praxicloud.core.kubernetes.ReplicaDetails)">
+            <summary>
+            Initializes a new instance of the type
+            </summary>
+            <param name="watchHandle">The watch handle that will stop watching when closed</param>
+            <param name="watchStatus">The current status of the watch</param>
+            <param name="userState">A user state object passed to the callback when invoked</param>
+            <param name="initialDetails">The initial details of the query that the watch is associated with</param>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesWatch.Finalize">
+            <summary>
+            Finalizes the instance
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.KubernetesWatch.WatchStatus">
+            <summary>
+            The current status of the watcher
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.KubernetesWatch.UserState">
+            <summary>
+            The user state passed into each callback
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.KubernetesWatch.InitialDetails">
+            <summary>
+            The initial details of the controller
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.KubernetesWatch.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:praxicloud.core.kubernetes.KubernetesWatchStatus">
+            <summary>
+            Indicates the status of a kubernetes watch connection
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesWatchStatus.Unknown">
+            <summary>
+            The status of the watch is not known
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesWatchStatus.Open">
+            <summary>
+            The status of the watch is open
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesWatchStatus.Closed">
+            <summary>
+            The status of the watch is closed
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesWatchStatus.Error">
+            <summary>
+            There was an error raised with the watch
+            </summary>
+        </member>
+        <member name="F:praxicloud.core.kubernetes.KubernetesWatchStatus.FailedToInitiate">
+            <summary>
+            The watch never initiated
+            </summary>
+        </member>
+        <member name="T:praxicloud.core.kubernetes.ProbeConfiguration">
+            <summary>
+            Configures container probes
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ProbeConfiguration.AvailabilityIPAddress">
+            <inheritdoc />
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ProbeConfiguration.AvailabilityPort">
+            <inheritdoc />
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ProbeConfiguration.AvailabilityProbeInterval">
+            <inheritdoc />
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ProbeConfiguration.UseTcp">
+            <inheritdoc />
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ProbeConfiguration.Certificate">
+            <inheritdoc />
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ProbeConfiguration.HealthIPAddress">
+            <inheritdoc />
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ProbeConfiguration.HealthPort">
+            <inheritdoc />
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ProbeConfiguration.HealthProbeInterval">
+            <inheritdoc />
+        </member>
+        <member name="T:praxicloud.core.kubernetes.ReplicaDetails">
+            <summary>
+            The count details of a controller that supports replicas
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ReplicaDetails.#ctor(System.String,System.String,praxicloud.core.kubernetes.KubernetesControllerType,praxicloud.core.kubernetes.KubernetesWatchStatus)">
+            <summary>
+            Initializes a new instance of the type
+            </summary>
+            <param name="namespaceName">The namespace names</param>
+            <param name="controllerName">The controller name</param>
+            <param name="type">The type of the kubernetes controller</param>
+            <param name="watchStatus">The status of the kubernetes watch</param>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ReplicaDetails.NamespaceName">
+            <summary>
+            The name of the namespace the pod is associated with
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ReplicaDetails.ControllerName">
+            <summary>
+            The name of the controller 
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ReplicaDetails.Type">
+            <summary>
+            The type of controller
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ReplicaDetails.ReplicaCount">
+            <summary>
+            The number of replicas
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ReplicaDetails.ReadyReplicaCount">
+            <summary>
+            The number of replicas that are ready
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ReplicaDetails.DesiredReplicaCount">
+            <summary>
+            The desired replica count
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ReplicaDetails.WatchStatus">
+            <summary>
+            The status of the watch if associated with one
+            </summary>
+        </member>
+        <member name="P:praxicloud.core.kubernetes.ReplicaDetails.Exception">
+            <summary>
+            Used to communicate exceptions raised by the controller watch
+            </summary>
+        </member>
+        <member name="M:praxicloud.core.kubernetes.ReplicaDetails.SetReplicaDetails(System.Nullable{System.Int32},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Sets the replica details
+            </summary>
+            <param name="replicaCount">The number of replicas that are scheduled</param>
+            <param name="readyReplicaCount">The number of replcas that are ready</param>
+            <param name="desiredReplicaCount">The number of replicas that are desired</param>
+        </member>
+    </members>
+</doc>
