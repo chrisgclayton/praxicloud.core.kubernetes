@@ -8,6 +8,8 @@
     <Description>A set of standard Kubernetes features and functions</Description>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
     <PackageTags>PraxiCloud Core Kubernetes Stateful pod container</PackageTags>
+    <AssemblyVersion>1.0.11.0</AssemblyVersion>
+    <FileVersion>1.0.11.0</FileVersion>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
