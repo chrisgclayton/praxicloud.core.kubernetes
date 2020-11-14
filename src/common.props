@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
-    <Authors>Chris Clayton</Authors>
-    <Company>Chris Clayton</Company>
+    <Authors>Christopher Clayton</Authors>
+    <Company>Christopher Clayton</Company>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Copyright>© Chris Clayton. All rights reserved.</Copyright>
+    <Copyright>© Christopher Clayton. All rights reserved.</Copyright>
     <Product>PraxiCloud Libraries</Product>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/chrisgclayton/praxicloud.core.kubernetes</PackageProjectUrl>
