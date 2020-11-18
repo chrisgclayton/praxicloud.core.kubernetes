@@ -39,7 +39,7 @@ namespace praxicloud.core.kubernetes
                 configure.SetMinimumLevel(loggerConfiguration.Level);
 
                 if (loggerConfiguration.IncludeConsoleLogger)
-                {
+                {                    
                     configure.AddConsole(new Action<Microsoft.Extensions.Logging.Console.ConsoleLoggerOptions>(options =>
                     {                        
                         options.DisableColors = !loggerConfiguration.IncludeColors;

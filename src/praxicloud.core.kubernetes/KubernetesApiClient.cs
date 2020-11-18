@@ -47,7 +47,7 @@ namespace praxicloud.core.kubernetes
         /// <summary>
         /// The Kuberentes configuration information that is in use
         /// </summary>
-        private KubernetesClientConfiguration _configuration;
+        private readonly KubernetesClientConfiguration _configuration;
 
         /// <summary>
         /// The client being used to communicate with the cluster
@@ -296,9 +296,10 @@ namespace praxicloud.core.kubernetes
                         },
                         (e) =>
                         {
-                            var reportingDetails = new ReplicaDetails(namespaceName, controllerName, controllerType, KubernetesWatchStatus.Error);
-
-                            reportingDetails.Exception = e;
+                            var reportingDetails = new ReplicaDetails(namespaceName, controllerName, controllerType, KubernetesWatchStatus.Error)
+                            {
+                                Exception = e
+                            };
                             watchCallback?.Invoke(reportingDetails, userState);
                         },
                         () =>
@@ -334,9 +335,10 @@ namespace praxicloud.core.kubernetes
                         },
                         (e) =>
                         {
-                            var reportingDetails = new ReplicaDetails(namespaceName, controllerName, controllerType, KubernetesWatchStatus.Error);
-
-                            reportingDetails.Exception = e;
+                            var reportingDetails = new ReplicaDetails(namespaceName, controllerName, controllerType, KubernetesWatchStatus.Error)
+                            {
+                                Exception = e
+                            };
                             watchCallback?.Invoke(reportingDetails, userState);
                         },
                         () =>
@@ -371,9 +373,10 @@ namespace praxicloud.core.kubernetes
                         },
                         (e) =>
                         {
-                            var reportingDetails = new ReplicaDetails(namespaceName, controllerName, controllerType, KubernetesWatchStatus.Error);
-
-                            reportingDetails.Exception = e;
+                            var reportingDetails = new ReplicaDetails(namespaceName, controllerName, controllerType, KubernetesWatchStatus.Error)
+                            {
+                                Exception = e
+                            };
                             watchCallback?.Invoke(reportingDetails, userState);
                         },
                         () =>
@@ -408,9 +411,10 @@ namespace praxicloud.core.kubernetes
                         },
                         (e) =>
                         {
-                            var reportingDetails = new ReplicaDetails(namespaceName, controllerName, controllerType, KubernetesWatchStatus.Error);
-
-                            reportingDetails.Exception = e;
+                            var reportingDetails = new ReplicaDetails(namespaceName, controllerName, controllerType, KubernetesWatchStatus.Error)
+                            {
+                                Exception = e
+                            };
                             watchCallback?.Invoke(reportingDetails, userState);
                         },
                         () =>

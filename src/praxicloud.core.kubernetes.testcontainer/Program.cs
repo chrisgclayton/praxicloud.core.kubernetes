@@ -10,7 +10,7 @@ namespace praxicloud.core.kubernetes.testcontainer
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var probes = new ProbeConfiguration
             {

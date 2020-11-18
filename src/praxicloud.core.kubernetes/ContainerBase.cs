@@ -54,9 +54,9 @@ namespace praxicloud.core.kubernetes
             Guard.NotNull(nameof(probeConfiguration), probeConfiguration);
             Guard.NotNull(nameof(diagnosticsConfiguration), diagnosticsConfiguration);
 
-            LoggerFactory = diagnosticsConfiguration.LoggerFactory == null ? new LoggerFactory() : diagnosticsConfiguration.LoggerFactory;
+            LoggerFactory = diagnosticsConfiguration.LoggerFactory ?? new LoggerFactory();
             Logger = LoggerFactory.CreateLogger(containerName);
-            MetricFactory = diagnosticsConfiguration.MetricFactory == null ? new MetricFactory() : diagnosticsConfiguration.MetricFactory;
+            MetricFactory = diagnosticsConfiguration.MetricFactory ?? new MetricFactory();
 
             _baseProbeConfiguration = probeConfiguration;          
         }
@@ -201,7 +201,7 @@ namespace praxicloud.core.kubernetes
                     if (KubernetesControllerType == KubernetesControllerType.StatefulSet)
                     {
                         var elements = KubernetesPodName.Split("-", StringSplitOptions.RemoveEmptyEntries);
-                        var indexText = elements[elements.Length - 1];
+                        var indexText = elements[^1];
 
                         KubernetesStatefulSetIndex = int.Parse(indexText);
                     }
