@@ -132,6 +132,11 @@
             If the Kubernetes controller supports replicas this will contain the replica count
             </summary>
         </member>
+        <member name="P:praxicloud.core.kubernetes.ContainerBase.NotifyOfScaleEvents">
+            <summary>
+            If true a Kubernetes watch will be configured to notify the derived type of controller scale events
+            </summary>
+        </member>
         <member name="M:praxicloud.core.kubernetes.ContainerBase.StartContainer">
             <summary>
             A method that the primary container must call to start processing

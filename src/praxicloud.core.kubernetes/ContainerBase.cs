@@ -156,6 +156,11 @@ namespace praxicloud.core.kubernetes
         /// If the Kubernetes controller supports replicas this will contain the replica count
         /// </summary>
         public int? KubernetesReplicaCount { get; private set; } = null;
+
+        /// <summary>
+        /// If true a Kubernetes watch will be configured to notify the derived type of controller scale events
+        /// </summary>
+        public virtual bool NotifyOfScaleEvents { get; } = false;
         #endregion
         #region Methods
         /// <summary>
@@ -214,13 +219,16 @@ namespace praxicloud.core.kubernetes
                         KubernetesReadyReplicaCount = replicas.ReadyReplicaCount;
                         KubernetesReplicaCount = replicas.ReplicaCount;
 
-                        _watch = await KubernetesClient.SubscribeToReplicaInformationAsync(KubernetesNamespace, KubernetesControllerName, KubernetesControllerType, "base", ControllerWatchHandler, ContainerLifecycle.CancellationToken).ConfigureAwait(false);
-
-                        if (_watch.InitialDetails != null)
+                        if (NotifyOfScaleEvents)
                         {
-                            if (_watch.InitialDetails.ReplicaCount.HasValue) KubernetesReplicaCount = _watch.InitialDetails.ReplicaCount.Value;
-                            if (_watch.InitialDetails.ReadyReplicaCount.HasValue) KubernetesReadyReplicaCount = _watch.InitialDetails.ReadyReplicaCount.Value;
-                            if (_watch.InitialDetails.DesiredReplicaCount.HasValue) KubernetesDesiredReplicaCount = _watch.InitialDetails.DesiredReplicaCount.Value;
+                            _watch = await KubernetesClient.SubscribeToReplicaInformationAsync(KubernetesNamespace, KubernetesControllerName, KubernetesControllerType, "base", ControllerWatchHandler, ContainerLifecycle.CancellationToken).ConfigureAwait(false);
+
+                            if (_watch.InitialDetails != null)
+                            {
+                                if (_watch.InitialDetails.ReplicaCount.HasValue) KubernetesReplicaCount = _watch.InitialDetails.ReplicaCount.Value;
+                                if (_watch.InitialDetails.ReadyReplicaCount.HasValue) KubernetesReadyReplicaCount = _watch.InitialDetails.ReadyReplicaCount.Value;
+                                if (_watch.InitialDetails.DesiredReplicaCount.HasValue) KubernetesDesiredReplicaCount = _watch.InitialDetails.DesiredReplicaCount.Value;
+                            }
                         }
                     }
                 }
