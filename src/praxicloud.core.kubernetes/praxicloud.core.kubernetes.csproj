@@ -2,7 +2,7 @@
   <Import Project="..\common.props" />
   
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>PraxiCloud-Core-Kubernetes</PackageId>
     <Description>A set of standard Kubernetes features and functions</Description>
@@ -17,16 +17,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="KubernetesClient" Version="3.0.11" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="3.1.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.10" />
-    <PackageReference Include="PraxiCloud-Core" Version="2.2.0" />
-    <PackageReference Include="PraxiCloud-Core-Kestrel" Version="2.3.0" />
-    <PackageReference Include="PraxiCloud-Core-Metrics" Version="2.3.0" />
-    <PackageReference Include="PraxiCloud-Core-Metrics-ApplicationInsights" Version="2.3.0" />
-    <PackageReference Include="PraxiCloud-Core-Metrics-Prometheus" Version="2.3.0" />
+    <PackageReference Include="KubernetesClient" Version="4.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
+    <PackageReference Include="PraxiCloud-Core" Version="5.0.0" />
+    <PackageReference Include="PraxiCloud-Core-Kestrel" Version="5.0.0" />
+    <PackageReference Include="PraxiCloud-Core-Metrics" Version="5.0.0" />
+    <PackageReference Include="PraxiCloud-Core-Metrics-ApplicationInsights" Version="5.0.0" />
+    <PackageReference Include="PraxiCloud-Core-Metrics-Prometheus" Version="5.0.0" />
   </ItemGroup>
 </Project>
