@@ -58,7 +58,8 @@ namespace praxicloud.core.kubernetes
             if(metricConfiguration.IncludeDebug) MetricFactory.AddDebug($"{diagnosticsName}-debug", metricConfiguration.ReportingInterval, metricConfiguration.IncludeLabels);
             if(metricConfiguration.IncludeConsole) MetricFactory.AddConsole($"{diagnosticsName}-console", metricConfiguration.ReportingInterval, metricConfiguration.IncludeLabels);
             if(metricConfiguration.IncludeApplicationInsights && !string.IsNullOrWhiteSpace(metricConfiguration.InstrumentationKey)) MetricFactory.AddApplicationInsights($"{diagnosticsName}-appinsights", metricConfiguration.InstrumentationKey);
-            if (metricConfiguration.IncludePrometheus && metricConfiguration.PrometheusPort > 0) MetricFactory.AddPrometheus($"{diagnosticsName}-prometheus", metricConfiguration.PrometheusPort, Environment.MachineName);
+            if (metricConfiguration.IncludePrometheus && metricConfiguration.PrometheusPort > 0) MetricFactory.AddPrometheus($"{diagnosticsName}-prometheus", metricConfiguration.PrometheusPort);
+//            if (metricConfiguration.IncludePrometheus && metricConfiguration.PrometheusPort > 0) MetricFactory.AddPrometheus($"{diagnosticsName}-prometheus", metricConfiguration.PrometheusPort, Environment.MachineName);
         }
 
         /// <summary>
